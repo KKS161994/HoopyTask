@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Hoopy</string>
+
+    <string name="title_activity_splash">Splash</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="pick_image_intent_text">Pick Image</string>
+</resources>
