@@ -49,7 +49,7 @@ class SplashActivity : AppCompatActivity(), PermissionUtil.ShowAlertCallback {
         var alertDialogbilder = AlertDialog.Builder(ContextThemeWrapper(this, android.R.style.Theme_Light_NoTitleBar))
         alertDialogbilder?.setTitle("Permission")
 
-        alertDialogbilder?.setMessage("Camera permission is required for the App to continue.")
+        alertDialogbilder?.setMessage("Camera and storage permission is required for the App to continue.")
             ?.setCancelable(false)
             ?.setNeutralButton("Ok") { dialog, id ->
 

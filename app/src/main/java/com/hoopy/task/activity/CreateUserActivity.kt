@@ -20,6 +20,8 @@ import croom.konekom.`in`.hoopy.rest.ApiInterface
 
 import android.net.Uri
 import android.util.Log
+import com.hoopy.task.constants.closeKeyboard
+import com.hoopy.task.constants.isNetWorkAvailable
 import com.hoopy.task.remote.response.PhotoUploadResponse
 import com.hoopy.task.remote.response.UserUploadResponse
 import retrofit2.Call
@@ -60,7 +62,13 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.submitData -> validateAndSubmitData()
+            R.id.submitData -> {
+                if (this.isNetWorkAvailable())
+                    validateAndSubmitData()
+                else {
+                    Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show()
+                }
+            }
             R.id.uploadImage -> openImageSelector()
         }
     }
@@ -98,19 +106,13 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         val thumbnail = data.extras?.get("data") as Bitmap
                         uiBinding.uploadImage.setImageBitmap(thumbnail)
-                        currentfilePath = getRealPathFromURI(getImageUri(this,thumbnail))
+                        currentfilePath = getRealPathFromURI(getImageUri(this, thumbnail))
                     }
-//                    Toast.makeText(
-//                        this,
-//                        "Please enter a profile picture too   " + currentfilePath,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
                 }
 
             }
         }
     }
-
 
 
     private fun getImageUri(inContext: Context, inImage: Bitmap): Uri {
@@ -140,6 +142,7 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun validateAndSubmitData() {
+        this.closeKeyboard()
         var isContactValid = Constant.isContactValid(uiBinding.contactText.text.toString())
 
         var isEmailValid = Constant.isEmailIdValid(uiBinding.emailText.text.toString())
@@ -156,19 +159,23 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
 
         //  uiBinding.uploadImage.drawable != ResourcesCompat.getDrawable(resources, R.drawable.upload_image, null)
         if (isEmailValid && isContactValid && isUserNameValid && isNameValid && isImageValid) {
-            Toast.makeText(this, "Data Valid   $isImageValid", Toast.LENGTH_SHORT).show()
             uploadImageToServer()
         }
 
 
         if (!isEmailValid)
             uiBinding.emailText.error = "Invalid Email"
+
         if (!isContactValid)
-            uiBinding.contactText.error = "Invalid Contact"
+            uiBinding.contactText.error =
+                "Invalid Contact. Mobile number should be of 10 digit and should begin with 7,8 or 9 "
+
         if (uiBinding.nameText.text.toString().isEmpty() || !isNameValid)
             uiBinding.nameText.error = "Invalid Name"
+
         if (!isUserNameValid)
-            uiBinding.userNameText.error = "Invalid UserName"
+            uiBinding.userNameText.error =
+                "Invalid UserName. Minimum 4 letter required and can contain only alphabet or digit"
 
         if (!isImageValid)
             Toast.makeText(this, "Please enter a profile picture too", Toast.LENGTH_SHORT).show()
@@ -179,42 +186,55 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
         val file = File(currentfilePath)
         val fileReqBody = RequestBody.create(MediaType.parse("image/*"), file)
         val part = MultipartBody.Part.createFormData("upload", file.getName(), fileReqBody);
-
+        uiBinding.progressBar.visibility = View.VISIBLE
         apiInterface.uploadPhoto(part).enqueue(object : Callback<PhotoUploadResponse> {
             override fun onResponse(
                 call: Call<PhotoUploadResponse>,
                 response: Response<PhotoUploadResponse>
             ) {
-                //Toast.makeText(mContext,"Succes api "+response.body()?.url.toString(),Toast.LENGTH_SHORT).show()
                 Log.d("Api Success ", "Api sucess" + response.body()!!.toString())
                 uploadUserDetails(response.body()!!.url.get(0))
+                uiBinding.progressBar.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<PhotoUploadResponse>, t: Throwable) {
-                Toast.makeText(mContext, "Failure api $t", Toast.LENGTH_SHORT).show()
+                uiBinding.progressBar.visibility = View.GONE
+                Toast.makeText(mContext, "Error in inserting data", Toast.LENGTH_SHORT).show()
 
             }
         })
     }
 
     private fun uploadUserDetails(imageUrl: String?) {
-        apiInterface.insertUser(uiBinding.nameText.text.toString(),
-                uiBinding.emailText.text.toString(),uiBinding.userNameText.text.toString(),uiBinding.contactText.text.toString(),
+        if (this.isNetWorkAvailable()) {
+            uiBinding.progressBar.visibility = View.VISIBLE
+            apiInterface.insertUser(
+                uiBinding.nameText.text.toString(),
+                uiBinding.emailText.text.toString(),
+                uiBinding.userNameText.text.toString(),
+                uiBinding.contactText.text.toString(),
                 imageUrl!!
             ).enqueue(object : Callback<UserUploadResponse> {
-            override fun onResponse(
-                call: Call<UserUploadResponse>,
-                response: Response<UserUploadResponse>
-            ) {
-                Toast.makeText(mContext,"User Registered Successfully",Toast.LENGTH_LONG).show()
-                Log.d("Api Success ", "Api sucess" + response.body()!!.toString())
-                finish()
-            }
+                override fun onResponse(
+                    call: Call<UserUploadResponse>,
+                    response: Response<UserUploadResponse>
+                ) {
+                    uiBinding.progressBar.visibility = View.GONE
+                    Toast.makeText(mContext, "User Registered Successfully", Toast.LENGTH_LONG)
+                        .show()
+                    Log.d("Api Success ", "Api sucess" + response.body()!!.toString())
+                    finish()
+                }
 
-            override fun onFailure(call: Call<UserUploadResponse>, t: Throwable) {
-                Toast.makeText(mContext, "Failure api insert user $t", Toast.LENGTH_SHORT).show()
+                override fun onFailure(call: Call<UserUploadResponse>, t: Throwable) {
+                    uiBinding.progressBar.visibility = View.GONE
+                    Toast.makeText(mContext, "Error in insertin data", Toast.LENGTH_SHORT)
+                        .show()
 
-            }
-        })
+                }
+            })
+        } else {
+            Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show()
+        }
     }
 }

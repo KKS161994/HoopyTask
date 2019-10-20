@@ -2,6 +2,7 @@ package croom.konekom.`in`.hoopy.rest
 
 import com.hoopy.task.constants.Constant
 import com.hoopy.task.remote.response.PhotoUploadResponse
+import com.hoopy.task.remote.response.UserFetchResponse
 import com.hoopy.task.remote.response.UserUploadResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -26,8 +27,16 @@ interface ApiInterface {
                    @Field("image_url") image_url:String):Call<UserUploadResponse>
     @FormUrlEncoded
     @POST(Constant.FETCH_USER_URL)
-    fun fetchUser(@Field("name") name:String,
-                  @Field("email") email:String,
-                  @Field("username") username:String,
-                  @Field("contact") contact: String):Call<UserUploadResponse>
+    fun fetchUser(@Field("name") name:String?,
+                  @Field("email") email:String?,
+                  @Field("username") username:String?,
+                  @Field("contact") contact: String?):Call<UserFetchResponse>
+
+    @FormUrlEncoded
+    @POST(Constant.UPDATE_USER_URL)
+    fun updateUser(@Field("user_id") id:Int?,
+                  @Field("name") name:String?,
+                  @Field("email") email:String?,
+                  @Field("username") username:String?,
+                  @Field("contact") contact: String?):Call<UserFetchResponse>
 }

@@ -1,5 +1,9 @@
 package com.hoopy.task.constants
 
+import android.app.Activity
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import com.hoopy.task.ConnectivityController
 import java.util.regex.Pattern
 
 /**
@@ -11,6 +15,7 @@ object Constant {
     const val FILE_UPLOAD_URL = "upload_test"
     const val INSERT_USER_URL = "insert_test"
     const val FETCH_USER_URL = "fetch_data_test"
+    const val UPDATE_USER_URL = "update_data_test"
     fun isEmailIdValid(email: String): Boolean {
 
             return Pattern.compile(
@@ -39,3 +44,15 @@ object Constant {
 
 
 }
+fun Activity.closeKeyboard()  {
+    val inputManager = this?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val focusedView = this.currentFocus
+    if (focusedView != null) {
+        inputManager.hideSoftInputFromWindow(focusedView.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS)
+    }
+}
+fun Context.isNetWorkAvailable(): Boolean {
+    return ConnectivityController.isNetworkAvailable(this)
+}
+

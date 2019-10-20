@@ -1,0 +1,147 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/folder_layout_outer"
+    android:layout_width="match_parent"
+    android:layout_height="110dp">
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        card_view:layout_constraintBottom_toBottomOf="parent"
+        card_view:layout_constraintStart_toStartOf="parent"
+        card_view:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        card_view:layout_constraintGuide_percent="0.75" />
+
+    <TextView
+        android:id="@+id/profileNameView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Name"
+        android:maxLines="1"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:textSize="10sp"
+        card_view:layout_constraintStart_toEndOf="@+id/profile_image"
+        card_view:layout_constraintTop_toTopOf="@+id/profile_image"
+        card_view:layout_constraintVertical_bias="0.0" />
+
+
+
+    <TextView
+        android:id="@+id/profileNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="12sp"
+        android:text="ABCD"
+
+        card_view:layout_constraintStart_toEndOf="@+id/profileNameView"
+        card_view:layout_constraintTop_toTopOf="@+id/profile_image"
+        />
+
+    <TextView
+        android:id="@+id/profileEmailView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Email"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"
+
+        card_view:layout_constraintStart_toEndOf="@+id/profile_image"
+        card_view:layout_constraintTop_toBottomOf="@+id/profileNameView" />
+
+
+
+    <TextView
+        android:id="@+id/profileEmailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="12sp"
+        android:text="abcd@gmail.com"
+
+        card_view:layout_constraintStart_toEndOf="@+id/profileEmailView"
+       card_view:layout_constraintTop_toBottomOf="@+id/profileNameText" />
+    <TextView
+    android:id="@+id/profileContactView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:text="Contact"
+    android:textSize="10sp"
+    android:textStyle="bold"
+    android:layout_marginTop="4dp"
+    card_view:layout_constraintStart_toEndOf="@+id/profile_image"
+    card_view:layout_constraintTop_toBottomOf="@+id/profileEmailView" />
+
+
+
+    <TextView
+        android:id="@+id/profileContactText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="12sp"
+        android:text="987654321"
+        card_view:layout_constraintStart_toEndOf="@+id/profileContactView"
+        card_view:layout_constraintTop_toBottomOf="@+id/profileEmailText" />
+    <TextView
+        android:id="@+id/profileUserNameView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Username"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"
+        card_view:layout_constraintStart_toEndOf="@+id/profile_image"
+        card_view:layout_constraintTop_toBottomOf="@+id/profileContactView" />
+
+
+
+    <TextView
+        android:id="@+id/profileUserNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="12sp"
+        android:text="abcd1234"
+        card_view:layout_constraintStart_toEndOf="@+id/profileUserNameView"
+        card_view:layout_constraintTop_toBottomOf="@+id/profileContactText" />
+
+    <ImageView
+        android:id="@+id/editInfoButtpm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        card_view:layout_constraintBottom_toBottomOf="parent"
+        card_view:layout_constraintEnd_toEndOf="parent"
+        card_view:layout_constraintStart_toStartOf="@+id/guideline3"
+        card_view:layout_constraintTop_toTopOf="parent"
+        card_view:srcCompat="@android:drawable/ic_menu_edit" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,7 +36,7 @@ class PermissionUtil(var activity: Activity, val showAlertCallback: ShowAlertCal
     private fun shouldAskPermission(context: Context, permission: String): Boolean {
         if (shouldAskPermission()) {
             val permissionResult = ActivityCompat.checkSelfPermission(context, permission)
-            if (permissionResult != PackageManager.PERMISSION_GRANTED) {
+            if (permissionResult != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE)!=PackageManager.PERMISSION_GRANTED) {
                 return true
             }
         }
@@ -66,7 +66,7 @@ class PermissionUtil(var activity: Activity, val showAlertCallback: ShowAlertCal
                         Manifest.permission.CAMERA
                     )) && (!(beforeClickPermissionRat!!))) {
                     count = 2
-                    Toast.makeText(activity, "Click on permission and check storage permission for app to continue.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "Click on permission and check storage and camera permission for app to continue.", Toast.LENGTH_SHORT).show()
 
                     activity.startActivity(
                         Intent(
@@ -99,13 +99,6 @@ class PermissionUtil(var activity: Activity, val showAlertCallback: ShowAlertCal
     interface ShowAlertCallback {
         fun showAlert();
         fun permissionGranted();
-    }
-
-    /***
-     * To update the activity instance since on configuration change the activity instance will be created as new
-     */
-    fun updateActivity(activity: Activity) {
-        this.activity = activity
     }
 
 }

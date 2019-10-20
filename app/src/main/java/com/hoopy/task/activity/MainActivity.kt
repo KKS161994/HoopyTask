@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
     }
 
     private fun launchUpdateActivity() {
+        startActivity(Intent(this, FetchUserDetailsActivity::class.java))
     }
 
     private fun launchInsertActivity() {
