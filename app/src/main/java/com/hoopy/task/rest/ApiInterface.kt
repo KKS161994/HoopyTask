@@ -24,5 +24,10 @@ interface ApiInterface {
                    @Field("username") username:String,
                    @Field("contact") contact: String,
                    @Field("image_url") image_url:String):Call<UserUploadResponse>
-
+    @FormUrlEncoded
+    @POST(Constant.FETCH_USER_URL)
+    fun fetchUser(@Field("name") name:String,
+                  @Field("email") email:String,
+                  @Field("username") username:String,
+                  @Field("contact") contact: String):Call<UserUploadResponse>
 }

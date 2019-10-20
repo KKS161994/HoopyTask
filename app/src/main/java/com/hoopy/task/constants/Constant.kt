@@ -10,7 +10,7 @@ object Constant {
     const val BASE_URL = "https://www.team.hoopy.in/api/1.0/testApis/"
     const val FILE_UPLOAD_URL = "upload_test"
     const val INSERT_USER_URL = "insert_test"
-
+    const val FETCH_USER_URL = "fetch_data_test"
     fun isEmailIdValid(email: String): Boolean {
 
             return Pattern.compile(
