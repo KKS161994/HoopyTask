@@ -255,4 +255,9 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show()
         }
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

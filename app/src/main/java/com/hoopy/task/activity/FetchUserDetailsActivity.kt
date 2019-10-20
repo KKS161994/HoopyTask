@@ -167,15 +167,19 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
                     call: Call<UserFetchResponse>,
                     response: Response<UserFetchResponse>
                 ) {
-                    Toast.makeText(mContext, "Success", Toast.LENGTH_LONG).show()
                     Log.d("Api Success", "Api Success " + response.body().toString())
-
-                    if (response.body()?.usersList != null) {
+                    uiBinding.progressBar.visibility = View.GONE
+                    if (response.body()?.usersList != null&& response.body()?.usersList!!.isNotEmpty()) {
                         listOfUser.clear()
                         listOfUser.addAll(response.body()!!.usersList)
                         userListAdapter.users = listOfUser
-                        uiBinding.progressBar.visibility = View.GONE
+
                     }
+                    else{
+                        Toast.makeText(mContext, "No such user present", Toast.LENGTH_LONG).show()
+
+                    }
+
                 }
             })
         } else {
@@ -187,5 +191,9 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
         userListAdapter = UsersListAdapter(this)
         uiBinding.usersList.adapter = userListAdapter
         uiBinding.usersList.layoutManager = LinearLayoutManager(this)
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
