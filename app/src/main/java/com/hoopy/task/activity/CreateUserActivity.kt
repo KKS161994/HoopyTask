@@ -54,6 +54,7 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         uiBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_user)
         setSupportActionBar(uiBinding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = "Create User"
         uiBinding.submitData.setOnClickListener(this)
         uiBinding.uploadImage.setOnClickListener(this)
@@ -99,11 +100,14 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
             if (resultCode == Activity.RESULT_OK) {
                 data?.let {
                     currentfilePath = ""
+                    //If image is picked from gallery
                     if (it.data != null) {
                         var selectedImageURI = it.data
                         currentfilePath = getRealPathFromURI(selectedImageURI!!)
                         uiBinding.uploadImage.setImageURI(selectedImageURI)
-                    } else {
+                    }
+                    //If image is picked from camera
+                    else {
                         val thumbnail = data.extras?.get("data") as Bitmap
                         uiBinding.uploadImage.setImageBitmap(thumbnail)
                         currentfilePath = getRealPathFromURI(getImageUri(this, thumbnail))
@@ -114,7 +118,9 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
+    /***
+     * If the image is clicked from camera it is first stored in android database and through uri its exact path is found
+     */
     private fun getImageUri(inContext: Context, inImage: Bitmap): Uri {
         var bytes = ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -127,6 +133,9 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
         return Uri.parse(path)
     }
 
+    /***
+     * Return the path of image by quering Android Media Image Database and then returning path
+     */
     fun getRealPathFromURI(uri: Uri): String {
         var path = ""
         if (contentResolver != null) {
@@ -141,6 +150,9 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
         return path
     }
 
+    /***
+     * Validates if all the data are according to correct format
+     */
     private fun validateAndSubmitData() {
         this.closeKeyboard()
         var isContactValid = Constant.isContactValid(uiBinding.contactText.text.toString())
@@ -171,7 +183,7 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
                 "Invalid Contact. Mobile number should be of 10 digit and should begin with 7,8 or 9 "
 
         if (uiBinding.nameText.text.toString().isEmpty() || !isNameValid)
-            uiBinding.nameText.error = "Invalid Name"
+            uiBinding.nameText.error = "Invalid Name. Name should only contain alphabet and spaces."
 
         if (!isUserNameValid)
             uiBinding.userNameText.error =
@@ -181,6 +193,9 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "Please enter a profile picture too", Toast.LENGTH_SHORT).show()
     }
 
+    /***
+     * If data format are correct and image is present then image is sent to server
+     */
     private fun uploadImageToServer() {
 
         val file = File(currentfilePath)
@@ -205,6 +220,9 @@ class CreateUserActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
+    /***
+     * If image is successfully loaded at the server then the details and image url are sent to server for registration
+     */
     private fun uploadUserDetails(imageUrl: String?) {
         if (this.isNetWorkAvailable()) {
             uiBinding.progressBar.visibility = View.VISIBLE

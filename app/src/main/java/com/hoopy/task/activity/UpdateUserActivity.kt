@@ -34,18 +34,26 @@ class UpdateUserActivity : AppCompatActivity(), View.OnClickListener {
     private var id = -1
     private lateinit var context: Context
     val apiInterface = ApiClient.client.create(ApiInterface::class.java)
+    private lateinit var name:String
+    private lateinit var contact:String
+    private lateinit var email:String
+    private lateinit var username:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         uiBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_user)
         setSupportActionBar(uiBinding.toolbar)
         title = "Update User details"
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         context = this
-        uiBinding.nameText.setText(intent.getStringExtra("Name"))
-        uiBinding.contactText.setText(intent.getStringExtra("Contact"))
-        uiBinding.emailText.setText(intent.getStringExtra("Email"))
-        uiBinding.userNameText.setText(intent.getStringExtra("Username"))
+        name = intent.getStringExtra("Name")
+        contact = intent.getStringExtra("Contact")
+        username = intent.getStringExtra("Username")
+        email = intent.getStringExtra("Email")
+        uiBinding.nameText.setText(name)
+        uiBinding.contactText.setText(contact)
+        uiBinding.emailText.setText(email)
+        uiBinding.userNameText.setText(username)
         id = intent.getIntExtra("Id", -1)
         Glide.with(this)
             .load(intent.getStringExtra("ImageUrl"))
@@ -76,36 +84,52 @@ class UpdateUserActivity : AppCompatActivity(), View.OnClickListener {
 
         }
     }
-
+    /***
+     * Validates if all the data are according to correct format
+     */
     private fun validateAndUpdateData() {
         this.closeKeyboard()
-        var isContactValid = Constant.isContactValid(uiBinding.contactText.text.toString())
+        //Checking whether data has changed or not.
+        //If their is no data change raise a toast to update data
+        if(!name.equals(uiBinding.nameText.text.toString()) ||
+                !email.equals(uiBinding.emailText.text.toString())||
+                    !contact.equals(uiBinding.contactText.text.toString())||
+                    !username.equals(uiBinding.userNameText.text.toString())
+                ) {
+            var isContactValid = Constant.isContactValid(uiBinding.contactText.text.toString())
 
-        var isEmailValid = Constant.isEmailIdValid(uiBinding.emailText.text.toString())
+            var isEmailValid = Constant.isEmailIdValid(uiBinding.emailText.text.toString())
 
-        var isUserNameValid = Constant.isUserNameValid(uiBinding.userNameText.text.toString())
+            var isUserNameValid = Constant.isUserNameValid(uiBinding.userNameText.text.toString())
 
-        var isNameValid = Constant.isNameValid(uiBinding.nameText.text.toString())
-        if (isEmailValid && isContactValid && isUserNameValid && isNameValid) {
+            var isNameValid = Constant.isNameValid(uiBinding.nameText.text.toString())
+            if (isEmailValid && isContactValid && isUserNameValid && isNameValid) {
 
-            uploadDataToServer()
+                uploadDataToServer()
+            }
+            if (!isEmailValid)
+                uiBinding.emailText.error = "Invalid Email"
+
+            if (!isContactValid)
+                uiBinding.contactText.error =
+                    "Invalid Contact. Mobile number should be of 10 digit and should begin with 7,8 or 9 "
+
+            if (uiBinding.nameText.text.toString().isEmpty() || !isNameValid)
+                uiBinding.nameText.error = "Invalid Name. Name should only contain alphabet and spaces."
+
+            if (!isUserNameValid)
+                uiBinding.userNameText.error =
+                    "Invalid UserName. Minimum 4 letter required and can contain only alphabet or digit"
         }
-        if (!isEmailValid)
-            uiBinding.emailText.error = "Invalid Email"
+        else{
+            Toast.makeText(context, "No data Updated.", Toast.LENGTH_LONG).show()
 
-        if (!isContactValid)
-            uiBinding.contactText.error =
-                "Invalid Contact. Mobile number should be of 10 digit and should begin with 7,8 or 9 "
-
-        if (uiBinding.nameText.text.toString().isEmpty() || !isNameValid)
-            uiBinding.nameText.error = "Invalid Name"
-
-        if (!isUserNameValid)
-            uiBinding.userNameText.error =
-                "Invalid UserName. Minimum 4 letter required and can contain only alphabet or digit"
-
+        }
     }
 
+    /***
+     * If data format are correct then update the new data to server
+     */
     private fun uploadDataToServer() {
         uiBinding.progressBar.visibility = View.VISIBLE
         apiInterface.updateUser(

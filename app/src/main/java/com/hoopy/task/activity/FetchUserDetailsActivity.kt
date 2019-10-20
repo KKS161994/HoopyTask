@@ -47,8 +47,10 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
         uiBinding = DataBindingUtil.setContentView(this, R.layout.activity_fetch_user_details)
         mContext = this
         setSupportActionBar(uiBinding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = "Get User"
         uiBinding.submitData.setOnClickListener(this)
+        //Populating spinner data
         var filterItemArray = resources.getStringArray(R.array.array_name)
         val spinneradapter = ArrayAdapter<String>(this, R.layout.spinner_item, filterItemArray)
         uiBinding.filterSpinner.adapter = spinneradapter
@@ -63,6 +65,9 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    /***
+     * When item  of user list recycler view is clicked
+     */
     fun onItemClick(position: Int) {
         val user = listOfUser[position]
         val intent = Intent(this, UpdateUserActivity::class.java)
@@ -76,6 +81,9 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(intent, UPDATE_CODE)
     }
 
+    /***
+     * When data comes back from update user activity
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UPDATE_CODE) {
@@ -97,7 +105,9 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
+    /***
+     * Validates if all the data are according to correct format
+     */
     private fun validateAndFetchUserDetails() {
         this.closeKeyboard()
         val selectedItem = uiBinding.filterSpinner.selectedItem.toString()
@@ -140,7 +150,9 @@ class FetchUserDetailsActivity : AppCompatActivity(), View.OnClickListener {
 
 
     }
-
+    /***
+     * If data format are correct then data according to filter is pulled from server
+     */
     private fun getData() {
         if (mContext.isNetWorkAvailable()) {
             uiBinding.progressBar.visibility = View.VISIBLE

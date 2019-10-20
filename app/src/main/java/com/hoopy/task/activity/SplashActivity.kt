@@ -38,13 +38,19 @@ class SplashActivity : AppCompatActivity(), PermissionUtil.ShowAlertCallback {
 
     }
 
-
+    /***
+     * Checks the permission required for app
+     */
     override fun onStart() {
         super.onStart()
         if(alertDialog==null||!(alertDialog!!.isShowing)){
             permissionUtil.checkorRequestPermission(permission)
         }
     }
+
+    /***
+     * If the permission is not granted show alert dialog to make user know about permission
+     */
     override fun showAlert() {
         var alertDialogbilder = AlertDialog.Builder(ContextThemeWrapper(this, android.R.style.Theme_Light_NoTitleBar))
         alertDialogbilder?.setTitle("Permission")
@@ -75,6 +81,9 @@ class SplashActivity : AppCompatActivity(), PermissionUtil.ShowAlertCallback {
         }
     }
 
+    /***
+     * If the permission is granted redirect to main activity
+     */
     override fun permissionGranted() {
         Handler().postDelayed({
             startActivity(Intent(this, MainActivity::class.java))

@@ -16,13 +16,18 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         super.onCreate(savedInstanceState)
         uiBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(uiBinding.toolbar)
-        uiBinding.toolbar.title = "Hoopy"
+
+        title = "Hoopy"
         uiBinding.insertIcon.setOnClickListener(this)
         uiBinding.insertText.setOnClickListener(this)
         uiBinding.updateIcon.setOnClickListener(this)
         uiBinding.updateText.setOnClickListener(this)
 
     }
+
+    /***
+     * Handles onClick of insertView or updateView
+     */
     override fun onClick(v: View?) {
         v?.let {
             when(v.id){
